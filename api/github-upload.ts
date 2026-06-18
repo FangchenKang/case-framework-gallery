@@ -34,12 +34,14 @@ type UploadFrameworkInput = {
   citation?: string;
   notes?: string;
   talkScript?: string;
+  imagePath?: string;
   fileType?: FrameworkFileType;
   createdAt?: string;
   fileName?: string;
 };
 
 type UploadRequestBody = {
+  action?: 'upload' | 'update-metadata';
   imageDataUrl?: string;
   imageContentBase64?: string;
   framework?: UploadFrameworkInput;
@@ -214,6 +216,34 @@ function buildRecord(body: UploadRequestBody, publicImagePath: string): GitHubFr
   };
 }
 
+function buildMetadataUpdateRecord(
+  body: UploadRequestBody,
+  existingRecord: GitHubFrameworkRecord,
+): GitHubFrameworkRecord {
+  const framework = body.framework || {};
+  const now = new Date().toISOString();
+  const id = sanitizeRequiredText(framework.id, 'id');
+
+  return {
+    ...existingRecord,
+    id,
+    title: sanitizeRequiredText(framework.title, 'title'),
+    category: sanitizeRequiredText(framework.category, 'category'),
+    type: sanitizeRequiredText(framework.type, 'type'),
+    scene: sanitizeRequiredText(framework.scene, 'scene'),
+    tags: sanitizeTags(framework.tags),
+    description: sanitizeRequiredText(framework.description, 'description'),
+    citation: sanitizeOptionalText(framework.citation),
+    notes: sanitizeOptionalText(framework.notes),
+    talkScript: sanitizeOptionalText(framework.talkScript),
+    fileType: framework.fileType ? sanitizeFileType(framework.fileType) : existingRecord.fileType,
+    sourceType: 'github',
+    createdAt: existingRecord.createdAt || sanitizeOptionalText(framework.createdAt) || now,
+    updatedAt: now,
+    fileName: sanitizeOptionalText(framework.fileName) || existingRecord.fileName,
+  };
+}
+
 async function githubRequest(
   env: ReturnType<typeof readEnv>,
   path: string,
@@ -304,6 +334,18 @@ function upsertRecord(records: GitHubFrameworkRecord[], record: GitHubFrameworkR
   return [...records, record];
 }
 
+function updateRecord(records: GitHubFrameworkRecord[], record: GitHubFrameworkRecord) {
+  const existingIndex = records.findIndex((item) => item.id === record.id);
+
+  if (existingIndex < 0) {
+    throw new Error(`找不到 id 为 ${record.id} 的 GitHub 图形记录。`);
+  }
+
+  const next = [...records];
+  next[existingIndex] = record;
+  return next;
+}
+
 export default async function handler(request: ServerlessRequest, response: ServerlessResponse) {
   response.setHeader('Content-Type', 'application/json; charset=utf-8');
 
@@ -315,6 +357,45 @@ export default async function handler(request: ServerlessRequest, response: Serv
   try {
     const env = readEnv();
     const body = parseBody(request.body);
+    const action = body.action === 'update-metadata' ? 'update-metadata' : 'upload';
+
+    if (action === 'update-metadata') {
+      const existingDataFile = await getRepositoryFile(env, DATA_FILE_PATH);
+
+      if (!existingDataFile) {
+        throw new Error('public/data/frameworks.json 不存在，无法更新图形元数据。');
+      }
+
+      const existingRecords = JSON.parse(decodeGitHubContent(existingDataFile)) as unknown;
+
+      if (!Array.isArray(existingRecords)) {
+        throw new Error('public/data/frameworks.json 必须是 JSON 数组。');
+      }
+
+      const id = sanitizeRequiredText(body.framework?.id, 'id');
+      const existingRecord = (existingRecords as GitHubFrameworkRecord[]).find(
+        (item) => item.id === id,
+      );
+
+      if (!existingRecord) {
+        throw new Error(`找不到 id 为 ${id} 的 GitHub 图形记录。`);
+      }
+
+      const record = buildMetadataUpdateRecord(body, existingRecord);
+      const commitMessage = `Update framework: ${record.title}`;
+
+      await putRepositoryFile(
+        env,
+        DATA_FILE_PATH,
+        encodeJson(updateRecord(existingRecords as GitHubFrameworkRecord[], record)),
+        commitMessage,
+        existingDataFile.sha,
+      );
+
+      response.status(200).json({ framework: record });
+      return;
+    }
+
     const fileType = sanitizeFileType(body.framework?.fileType);
     const date = new Date().toISOString().slice(0, 10);
     const imageId = createRandomId();

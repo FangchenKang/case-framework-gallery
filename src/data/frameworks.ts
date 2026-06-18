@@ -15,6 +15,8 @@ export type FrameworkFileType = 'svg' | 'png' | 'jpg';
 
 export type FrameworkSource = 'sample' | 'local' | 'github';
 
+export type FrameworkSyncStatus = 'synced' | 'dirty' | 'failed';
+
 export type FrameworkCategory =
   | '政策执行框架'
   | '基层治理机制'
@@ -58,7 +60,22 @@ export interface FrameworkItem {
   githubSyncedAt?: string;
   githubImagePath?: string;
   githubRecordId?: string;
+  githubSyncStatus?: FrameworkSyncStatus;
+  githubSyncError?: string;
 }
+
+export type FrameworkMetadataFields = Pick<
+  FrameworkItem,
+  | 'title'
+  | 'category'
+  | 'type'
+  | 'scene'
+  | 'description'
+  | 'tags'
+  | 'citation'
+  | 'notes'
+  | 'talkScript'
+>;
 
 export type GitHubFrameworkRecord = Omit<
   FrameworkItem,

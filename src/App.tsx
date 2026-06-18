@@ -15,10 +15,11 @@ import {
   type GitHubFrameworkItem,
   type FrameworkCategory,
   type FrameworkItem,
+  type FrameworkMetadataFields,
   type FrameworkType,
 } from './data/frameworks';
 import { getGitHubFrameworks } from './data/githubFrameworks';
-import { syncFrameworkToGitHub } from './data/githubSync';
+import { syncFrameworkToGitHub, updateFrameworkMetadataOnGitHub } from './data/githubSync';
 import {
   deleteLocalFramework,
   getLocalFrameworks,
@@ -130,6 +131,8 @@ function App() {
       githubSyncedAt: githubFramework.updatedAt,
       githubImagePath: githubFramework.imagePath,
       githubRecordId: githubFramework.id,
+      githubSyncStatus: 'synced',
+      githubSyncError: undefined,
     };
 
     await saveLocalFramework(syncedLocalFramework);
@@ -143,6 +146,135 @@ function App() {
     setSelectedFramework(syncedLocalFramework);
 
     return githubFramework;
+  };
+
+  const handleSaveFrameworkMetadata = async (
+    framework: FrameworkItem,
+    metadata: FrameworkMetadataFields,
+  ) => {
+    if (framework.source === 'sample') {
+      throw new Error('示例图形不能编辑。');
+    }
+
+    const isSynced = framework.source === 'github' || Boolean(framework.githubSyncedAt);
+    const updatedAt = new Date().toISOString();
+    const updatedFramework: FrameworkItem = {
+      ...framework,
+      ...metadata,
+      updatedAt,
+      githubSyncStatus: isSynced ? 'dirty' : framework.githubSyncStatus,
+      githubSyncError: undefined,
+    };
+
+    if (framework.source === 'local') {
+      const updatedLocalFramework = updatedFramework as LocalFrameworkItem;
+      await saveLocalFramework(updatedLocalFramework);
+      setLocalFrameworks((current) =>
+        current.map((item) =>
+          item.id === updatedLocalFramework.id ? updatedLocalFramework : item,
+        ),
+      );
+      setSelectedFramework(updatedLocalFramework);
+      return updatedLocalFramework;
+    }
+
+    const updatedGitHubFramework = {
+      ...updatedFramework,
+      source: 'github',
+      sourceType: 'github',
+      createdAt: framework.createdAt || updatedAt,
+    } as GitHubFrameworkItem;
+
+    setGithubFrameworks((current) =>
+      current.map((item) =>
+        item.id === updatedGitHubFramework.id ? updatedGitHubFramework : item,
+      ),
+    );
+    setSelectedFramework(updatedGitHubFramework);
+    return updatedGitHubFramework;
+  };
+
+  const markGitHubSyncFailure = (framework: FrameworkItem, message: string) => {
+    const failedFramework: FrameworkItem = {
+      ...framework,
+      githubSyncStatus: 'failed',
+      githubSyncError: message,
+    };
+
+    if (framework.source === 'local') {
+      const failedLocalFramework = failedFramework as LocalFrameworkItem;
+      setLocalFrameworks((current) =>
+        current.map((item) =>
+          item.id === failedLocalFramework.id ? failedLocalFramework : item,
+        ),
+      );
+      setSelectedFramework(failedLocalFramework);
+      void saveLocalFramework(failedLocalFramework);
+      return;
+    }
+
+    if (framework.source === 'github') {
+      const failedGitHubFramework = failedFramework as GitHubFrameworkItem;
+      setGithubFrameworks((current) =>
+        current.map((item) =>
+          item.id === failedGitHubFramework.id ? failedGitHubFramework : item,
+        ),
+      );
+      setSelectedFramework(failedGitHubFramework);
+    }
+  };
+
+  const handleResyncGitHubMetadata = async (framework: FrameworkItem) => {
+    if (framework.source === 'sample') {
+      throw new Error('示例图形不能同步到 GitHub。');
+    }
+
+    try {
+      const githubFramework = await updateFrameworkMetadataOnGitHub(framework);
+
+      if (framework.source === 'local') {
+        const syncedLocalFramework: LocalFrameworkItem = {
+          ...(framework as LocalFrameworkItem),
+          githubSyncedAt: githubFramework.updatedAt,
+          githubImagePath: githubFramework.githubImagePath || githubFramework.imagePath,
+          githubRecordId: githubFramework.id,
+          githubSyncStatus: 'synced',
+          githubSyncError: undefined,
+        };
+
+        await saveLocalFramework(syncedLocalFramework);
+        setLocalFrameworks((current) =>
+          current.map((item) =>
+            item.id === syncedLocalFramework.id ? syncedLocalFramework : item,
+          ),
+        );
+        setSelectedFramework(syncedLocalFramework);
+      } else {
+        const syncedGitHubFramework: GitHubFrameworkItem = {
+          ...githubFramework,
+          githubSyncStatus: 'synced',
+          githubSyncError: undefined,
+        };
+
+        setGithubFrameworks((current) =>
+          current.map((item) =>
+            item.id === syncedGitHubFramework.id ? syncedGitHubFramework : item,
+          ),
+        );
+        setSelectedFramework(syncedGitHubFramework);
+      }
+
+      setGithubFrameworks((current) => {
+        const next = current.filter((item) => item.id !== githubFramework.id);
+        return [...next, githubFramework];
+      });
+
+      return githubFramework;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'GitHub 重新同步失败。';
+      markGitHubSyncFailure(framework, message);
+      throw error;
+    }
   };
 
   return (
@@ -198,6 +330,8 @@ function App() {
         onClose={() => setSelectedFramework(null)}
         onDeleteLocal={handleDeleteLocalFramework}
         onSyncToGitHub={handleSyncToGitHub}
+        onSaveMetadata={handleSaveFrameworkMetadata}
+        onResyncGitHubMetadata={handleResyncGitHubMetadata}
       />
     </main>
   );

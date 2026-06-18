@@ -681,6 +681,15 @@ textarea:focus {
   overflow-wrap: anywhere;
 }
 
+.edit-form {
+  display: grid;
+  gap: 16px;
+}
+
+.edit-form .form-grid {
+  grid-template-columns: 1fr;
+}
+
 .modal__actions {
   display: flex;
   flex-wrap: wrap;

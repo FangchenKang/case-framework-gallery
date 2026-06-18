@@ -65,6 +65,10 @@ export function toGitHubFrameworkItem(record: GitHubFrameworkRecord): GitHubFram
     createdAt: record.createdAt,
     updatedAt: record.updatedAt,
     fileName: record.fileName,
+    githubSyncedAt: record.updatedAt,
+    githubImagePath: record.imagePath,
+    githubRecordId: record.id,
+    githubSyncStatus: 'synced',
   };
 }
 
