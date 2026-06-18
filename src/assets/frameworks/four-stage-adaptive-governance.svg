@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">四阶段适应性治理演化图</title>
+  <desc id="desc">黑白时间轴图，展示适应性治理从识别到制度化的四阶段演化。</desc>
+  <rect width="1200" height="760" fill="#fafafa"/>
+  <text x="600" y="110" text-anchor="middle" font-family="Noto Serif SC, SimSun, serif" font-size="36" font-weight="700" fill="#111">四阶段适应性治理演化图</text>
+  <line x1="130" y1="380" x2="1070" y2="380" stroke="#111" stroke-width="4"/>
+  <circle cx="190" cy="380" r="42" fill="#fff" stroke="#111" stroke-width="3"/>
+  <circle cx="462" cy="380" r="42" fill="#fff" stroke="#111" stroke-width="3"/>
+  <circle cx="734" cy="380" r="42" fill="#fff" stroke="#111" stroke-width="3"/>
+  <circle cx="1006" cy="380" r="42" fill="#111" stroke="#111" stroke-width="3"/>
+  <text x="190" y="389" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="26" font-weight="700" fill="#111">1</text>
+  <text x="462" y="389" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="26" font-weight="700" fill="#111">2</text>
+  <text x="734" y="389" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="26" font-weight="700" fill="#111">3</text>
+  <text x="1006" y="389" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="26" font-weight="700" fill="#fff">4</text>
+  <rect x="82" y="205" width="216" height="96" fill="#fff" stroke="#333" stroke-width="2"/>
+  <rect x="354" y="459" width="216" height="96" fill="#fff" stroke="#333" stroke-width="2"/>
+  <rect x="626" y="205" width="216" height="96" fill="#fff" stroke="#333" stroke-width="2"/>
+  <rect x="898" y="459" width="216" height="96" fill="#fff" stroke="#333" stroke-width="2"/>
+  <text x="190" y="244" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="22" font-weight="700" fill="#111">情境识别</text>
+  <text x="190" y="276" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="17" fill="#555">风险显现</text>
+  <text x="462" y="498" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="22" font-weight="700" fill="#111">试探调整</text>
+  <text x="462" y="530" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="17" fill="#555">小步快跑</text>
+  <text x="734" y="244" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="22" font-weight="700" fill="#111">协同扩散</text>
+  <text x="734" y="276" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="17" fill="#555">多元联动</text>
+  <text x="1006" y="498" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="22" font-weight="700" fill="#111">制度固化</text>
+  <text x="1006" y="530" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="17" fill="#555">规则沉淀</text>
+  <line x1="190" y1="301" x2="190" y2="338" stroke="#111" stroke-width="2"/>
+  <line x1="462" y1="422" x2="462" y2="459" stroke="#111" stroke-width="2"/>
+  <line x1="734" y1="301" x2="734" y2="338" stroke="#111" stroke-width="2"/>
+  <line x1="1006" y1="422" x2="1006" y2="459" stroke="#111" stroke-width="2"/>
+</svg>

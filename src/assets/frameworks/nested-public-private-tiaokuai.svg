@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">公私条块模糊嵌套机制图</title>
+  <desc id="desc">黑白左右结构图，展示公私边界与条块关系之间的模糊嵌套。</desc>
+  <rect width="1200" height="760" fill="#f7f7f7"/>
+  <text x="600" y="108" text-anchor="middle" font-family="Noto Serif SC, SimSun, serif" font-size="36" font-weight="700" fill="#111">公私条块模糊嵌套机制图</text>
+  <rect x="92" y="176" width="410" height="440" fill="#fff" stroke="#111" stroke-width="3"/>
+  <rect x="698" y="176" width="410" height="440" fill="#fff" stroke="#111" stroke-width="3"/>
+  <text x="297" y="232" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="28" font-weight="700" fill="#111">公共部门</text>
+  <text x="903" y="232" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="28" font-weight="700" fill="#111">社会 / 市场主体</text>
+  <rect x="160" y="286" width="274" height="78" fill="#fff" stroke="#333" stroke-width="2"/>
+  <text x="297" y="334" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="22" fill="#111">条线任务</text>
+  <rect x="160" y="422" width="274" height="78" fill="#fff" stroke="#333" stroke-width="2"/>
+  <text x="297" y="470" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="22" fill="#111">块面协调</text>
+  <rect x="766" y="286" width="274" height="78" fill="#fff" stroke="#333" stroke-width="2"/>
+  <text x="903" y="334" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="22" fill="#111">资源供给</text>
+  <rect x="766" y="422" width="274" height="78" fill="#fff" stroke="#333" stroke-width="2"/>
+  <text x="903" y="470" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="22" fill="#111">责任共担</text>
+  <rect x="485" y="312" width="230" height="160" fill="#111"/>
+  <text x="600" y="371" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="24" font-weight="700" fill="#fff">模糊嵌套</text>
+  <text x="600" y="411" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="18" fill="#ddd">边界协商</text>
+  <text x="600" y="440" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="18" fill="#ddd">角色转换</text>
+  <path d="M434 326h51" stroke="#111" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M766 326h-51" stroke="#111" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M434 462h51" stroke="#111" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M766 462h-51" stroke="#111" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M297 500C366 604 834 604 903 500" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="9 8"/>
+  <path d="M903 286C836 182 364 182 297 286" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="9 8"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#111"/>
+    </marker>
+  </defs>
+</svg>

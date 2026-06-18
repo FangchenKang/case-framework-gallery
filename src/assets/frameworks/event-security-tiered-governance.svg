@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">大型活动安全保障梯次治理图</title>
+  <desc id="desc">黑白梯次治理图，展示大型活动安全保障中的预防、响应、处置和复盘层次。</desc>
+  <rect width="1200" height="760" fill="#f9f9f8"/>
+  <text x="600" y="108" text-anchor="middle" font-family="Noto Serif SC, SimSun, serif" font-size="36" font-weight="700" fill="#111">大型活动安全保障梯次治理图</text>
+  <polygon points="600,168 1040,600 160,600" fill="#fff" stroke="#111" stroke-width="3"/>
+  <line x1="343" y1="480" x2="857" y2="480" stroke="#111" stroke-width="2"/>
+  <line x1="432" y1="392" x2="768" y2="392" stroke="#111" stroke-width="2"/>
+  <line x1="522" y1="304" x2="678" y2="304" stroke="#111" stroke-width="2"/>
+  <text x="600" y="257" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="23" font-weight="700" fill="#111">核心风险控制</text>
+  <text x="600" y="355" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="22" fill="#111">现场响应协同</text>
+  <text x="600" y="443" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="22" fill="#111">外围秩序维护</text>
+  <text x="600" y="531" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="22" fill="#111">常态预防与复盘</text>
+  <rect x="132" y="632" width="936" height="48" fill="#111"/>
+  <text x="600" y="664" text-anchor="middle" font-family="Noto Sans SC, Arial, sans-serif" font-size="20" fill="#fff">统一指挥 · 分级响应 · 多方联动 · 闭环改进</text>
+  <circle cx="306" cy="558" r="8" fill="#111"/>
+  <circle cx="894" cy="558" r="8" fill="#111"/>
+  <circle cx="405" cy="466" r="8" fill="#111"/>
+  <circle cx="795" cy="466" r="8" fill="#111"/>
+  <circle cx="505" cy="374" r="8" fill="#111"/>
+  <circle cx="695" cy="374" r="8" fill="#111"/>
+</svg>
