@@ -89,21 +89,36 @@ GITHUB_BRANCH=main
 
 本仓库提供 `.env.example`，其中只保留变量名和空值。你可以在本地创建 `.env.local`，但该文件已被 `.gitignore` 忽略，不应提交。
 
+仓库中的 `vercel.json` 已固定 Vercel 构建设置：
+
+```text
+buildCommand: npm run build
+outputDirectory: dist
+framework: vite
+```
+
 ### 本地测试 serverless API
 
 本地测试 API 时，推荐使用 Vercel CLI：
 
 ```bash
 npm install
+npx vercel pull --yes --environment=preview
 npx vercel dev
 ```
 
-然后打开 Vercel CLI 输出的本地地址。普通 `npm run dev` 只启动 Vite 前端开发服务器，不会运行 `api/github-upload.ts`。
+第一次运行前，需要先在 Vercel 网页端导入仓库并配置环境变量，再用 `vercel pull` 把项目设置拉到本地。然后打开 Vercel CLI 输出的本地地址。普通 `npm run dev` 只启动 Vite 前端开发服务器，不会运行 `api/github-upload.ts`。
 
 如果只想检查 API TypeScript 是否能通过，可以运行：
 
 ```bash
 npm run check:api
+```
+
+如果想在本地模拟 Vercel 生产构建，可以运行：
+
+```bash
+npx vercel build --yes
 ```
 
 GitHub Pages 只能托管静态前端，因此 `github.io` 地址可以看到“同步到 GitHub”按钮和已经发布的静态图库，但不能真正执行 `/api/github-upload`。真实写入 GitHub 仓库的测试需要在 Vercel 部署地址或 `vercel dev` 环境中完成。
@@ -136,6 +151,7 @@ case-framework-gallery/
 ├─ tsconfig.app.json
 ├─ tsconfig.node.json
 ├─ vite.config.ts
+├─ vercel.json
 └─ src/
    ├─ App.tsx
    ├─ main.tsx
