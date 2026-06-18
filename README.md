@@ -100,6 +100,14 @@ npx vercel dev
 
 然后打开 Vercel CLI 输出的本地地址。普通 `npm run dev` 只启动 Vite 前端开发服务器，不会运行 `api/github-upload.ts`。
 
+如果只想检查 API TypeScript 是否能通过，可以运行：
+
+```bash
+npm run check:api
+```
+
+GitHub Pages 只能托管静态前端，因此 `github.io` 地址可以看到“同步到 GitHub”按钮和已经发布的静态图库，但不能真正执行 `/api/github-upload`。真实写入 GitHub 仓库的测试需要在 Vercel 部署地址或 `vercel dev` 环境中完成。
+
 这个 GitHub 同步方案适合个人低频上传和轻量资料库维护；如果后续需要多人高并发协作、权限管理、历史审计或复杂查询，应升级为后端服务或数据库，而不是继续把 GitHub 当数据库使用。
 
 ## 技术栈
