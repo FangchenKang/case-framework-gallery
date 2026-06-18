@@ -6,10 +6,30 @@ interface FrameworkModalProps {
   framework: FrameworkItem | null;
   onClose: () => void;
   onDeleteLocal: (id: string) => Promise<void>;
+  onSyncToGitHub: (framework: FrameworkItem) => Promise<FrameworkItem>;
 }
 
-export function FrameworkModal({ framework, onClose, onDeleteLocal }: FrameworkModalProps) {
+function getSourceLabel(source: FrameworkItem['source']) {
+  if (source === 'local') {
+    return '本地上传';
+  }
+
+  if (source === 'github') {
+    return 'GitHub 同步';
+  }
+
+  return '示例图形';
+}
+
+export function FrameworkModal({
+  framework,
+  onClose,
+  onDeleteLocal,
+  onSyncToGitHub,
+}: FrameworkModalProps) {
   const [copyStatus, setCopyStatus] = useState('');
+  const [syncStatus, setSyncStatus] = useState('');
+  const [isSyncing, setIsSyncing] = useState(false);
 
   useEffect(() => {
     if (!framework) {
@@ -17,6 +37,10 @@ export function FrameworkModal({ framework, onClose, onDeleteLocal }: FrameworkM
     }
 
     setCopyStatus('');
+    setSyncStatus(
+      framework.source === 'local' && framework.githubSyncedAt ? '已同步到 GitHub' : '',
+    );
+    setIsSyncing(false);
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -77,6 +101,25 @@ export function FrameworkModal({ framework, onClose, onDeleteLocal }: FrameworkM
     }
   };
 
+  const syncToGitHub = async () => {
+    if (framework.source !== 'local') {
+      return;
+    }
+
+    setIsSyncing(true);
+    setSyncStatus('同步中...');
+
+    try {
+      await onSyncToGitHub(framework);
+      setSyncStatus('已同步到 GitHub');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'GitHub 同步失败。';
+      setSyncStatus(`同步失败：${message}`);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   return (
     <div className="modal" role="dialog" aria-modal="true" aria-labelledby="framework-modal-title">
       <button className="modal__overlay" type="button" onClick={onClose} aria-label="关闭详情" />
@@ -89,9 +132,7 @@ export function FrameworkModal({ framework, onClose, onDeleteLocal }: FrameworkM
           <div className="modal__header">
             <div>
               <span className="modal__type">{framework.type}</span>
-              <span className="modal__source">
-                {framework.source === 'local' ? '本地上传' : '示例图形'}
-              </span>
+              <span className="modal__source">{getSourceLabel(framework.source)}</span>
               <h2 id="framework-modal-title">{framework.title}</h2>
             </div>
             <button className="icon-button" type="button" onClick={onClose} title="关闭">
@@ -168,11 +209,22 @@ export function FrameworkModal({ framework, onClose, onDeleteLocal }: FrameworkM
               </button>
             ) : null}
             {framework.source === 'local' ? (
+              <button
+                className="button button--secondary"
+                type="button"
+                onClick={() => void syncToGitHub()}
+                disabled={isSyncing}
+              >
+                {isSyncing ? '同步中...' : '同步到 GitHub'}
+              </button>
+            ) : null}
+            {framework.source === 'local' ? (
               <button className="button button--danger" type="button" onClick={deleteLocalFramework}>
                 删除此图形
               </button>
             ) : null}
             {copyStatus ? <span className="modal__status">{copyStatus}</span> : null}
+            {syncStatus ? <span className="modal__status">{syncStatus}</span> : null}
           </div>
         </aside>
       </div>

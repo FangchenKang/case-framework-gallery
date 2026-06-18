@@ -13,7 +13,7 @@ import problemMechanismResultSource from '../assets/frameworks/problem-mechanism
 
 export type FrameworkFileType = 'svg' | 'png' | 'jpg';
 
-export type FrameworkSource = 'sample' | 'local';
+export type FrameworkSource = 'sample' | 'local' | 'github';
 
 export type FrameworkCategory =
   | '政策执行框架'
@@ -47,13 +47,34 @@ export interface FrameworkItem {
   imagePath: string;
   fileType: FrameworkFileType;
   source: FrameworkSource;
+  sourceType?: FrameworkSource;
   svgSource?: string;
   citation?: string;
   notes?: string;
   talkScript?: string;
   createdAt?: string;
+  updatedAt?: string;
   fileName?: string;
+  githubSyncedAt?: string;
+  githubImagePath?: string;
+  githubRecordId?: string;
 }
+
+export type GitHubFrameworkRecord = Omit<
+  FrameworkItem,
+  'source' | 'sourceType' | 'svgSource' | 'githubSyncedAt' | 'githubImagePath' | 'githubRecordId'
+> & {
+  sourceType: 'github';
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type GitHubFrameworkItem = FrameworkItem & {
+  source: 'github';
+  sourceType: 'github';
+  createdAt: string;
+  updatedAt: string;
+};
 
 export const frameworkCategories: FrameworkCategory[] = [
   '政策执行框架',

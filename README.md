@@ -15,6 +15,8 @@
 - 上传本地 PNG、JPG、JPEG、SVG 图形并保存到浏览器本地图库
 - 支持导出和导入本地图形 JSON 备份
 - 本地上传图形可删除，示例图形不可删除
+- 可通过 Vercel serverless API 将本地图形同步到 GitHub 仓库
+- 首页可加载 `public/data/frameworks.json` 中已经同步到 GitHub 的图形
 
 ## 运行命令
 
@@ -41,6 +43,65 @@ npm run dev
 
 未来版本可以继续升级为账号登录、云端同步、多人共享图库和在线编辑。
 
+## 同步到 GitHub
+
+项目支持部署到 Vercel 后，把本地上传图形同步到 GitHub 仓库。同步按钮位于本地上传图形的详情弹窗中，点击“同步到 GitHub”后会调用 `/api/github-upload`。
+
+同步成功后，serverless API 会把图片写入：
+
+```text
+public/frameworks/uploads/YYYY-MM-DD/random-id.ext
+```
+
+并把图形元数据写入或更新：
+
+```text
+public/data/frameworks.json
+```
+
+元数据包含 `id`、`title`、`category`、`type`、`scene`、`tags`、`description`、`citation`、`notes`、`talkScript`、`imagePath`、`fileType`、`sourceType`、`createdAt`、`updatedAt` 等字段。首页会同时显示示例图形、本地上传图形和已经同步到 GitHub 的图形。
+
+### 为什么不能把 GitHub token 放在前端
+
+前端代码会被打包并发送到用户浏览器。任何写进前端代码、`VITE_` 环境变量或静态资源里的 token，都可能被浏览器开发者工具看到。因此本项目只允许 serverless API 读取 `GITHUB_TOKEN`，前端只请求自己的 `/api/github-upload`，不直接请求 `api.github.com`。
+
+### 创建 GitHub fine-grained token
+
+建议使用 GitHub fine-grained personal access token：
+
+1. 只选择 `case-framework-gallery` 这一个仓库。
+2. 在 Repository permissions 中，把 `Contents` 设置为 `Read and write`。
+3. 不授予 Issues、Pull requests、Actions、Administration 等不必要权限。
+4. 设置合理过期时间，过期后在 Vercel 中更新环境变量。
+
+### Vercel 环境变量
+
+在 Vercel 项目的 Environment Variables 中配置：
+
+```text
+GITHUB_TOKEN=<你的 fine-grained token>
+GITHUB_OWNER=FangchenKang
+GITHUB_REPO=case-framework-gallery
+GITHUB_BRANCH=main
+```
+
+不要使用 `VITE_GITHUB_TOKEN`，也不要把真实 token 写入 `.env.example`、README 或前端代码。
+
+本仓库提供 `.env.example`，其中只保留变量名和空值。你可以在本地创建 `.env.local`，但该文件已被 `.gitignore` 忽略，不应提交。
+
+### 本地测试 serverless API
+
+本地测试 API 时，推荐使用 Vercel CLI：
+
+```bash
+npm install
+npx vercel dev
+```
+
+然后打开 Vercel CLI 输出的本地地址。普通 `npm run dev` 只启动 Vite 前端开发服务器，不会运行 `api/github-upload.ts`。
+
+这个 GitHub 同步方案适合个人低频上传和轻量资料库维护；如果后续需要多人高并发协作、权限管理、历史审计或复杂查询，应升级为后端服务或数据库，而不是继续把 GitHub 当数据库使用。
+
 ## 技术栈
 
 - React
@@ -48,13 +109,20 @@ npm run dev
 - TypeScript
 - 普通 CSS 组件样式
 - 本地 SVG/PNG/JPG 静态资源
+- Vercel serverless function
+- GitHub REST Contents API
 
 ## 项目结构
 
 ```text
 case-framework-gallery/
+├─ api/
+│  └─ github-upload.ts
 ├─ index.html
 ├─ package.json
+├─ public/
+│  └─ data/
+│     └─ frameworks.json
 ├─ README.md
 ├─ tsconfig.json
 ├─ tsconfig.app.json
@@ -85,6 +153,8 @@ case-framework-gallery/
    │  └─ UsageGuidePage.tsx
    ├─ data/
    │  ├─ frameworks.ts
+   │  ├─ githubFrameworks.ts
+   │  ├─ githubSync.ts
    │  └─ localFrameworks.ts
    └─ styles/
       └─ global.css

@@ -12,10 +12,13 @@ import {
   frameworkCategories,
   frameworks,
   frameworkTypes,
+  type GitHubFrameworkItem,
   type FrameworkCategory,
   type FrameworkItem,
   type FrameworkType,
 } from './data/frameworks';
+import { getGitHubFrameworks } from './data/githubFrameworks';
+import { syncFrameworkToGitHub } from './data/githubSync';
 import {
   deleteLocalFramework,
   getLocalFrameworks,
@@ -28,6 +31,16 @@ function normalizeText(value: string) {
   return value.trim().toLocaleLowerCase();
 }
 
+function mergeFrameworkSources(frameworkGroups: FrameworkItem[][]) {
+  const frameworksById = new Map<string, FrameworkItem>();
+
+  frameworkGroups.flat().forEach((framework) => {
+    frameworksById.set(framework.id, framework);
+  });
+
+  return Array.from(frameworksById.values());
+}
+
 function App() {
   const [currentPage, setCurrentPage] = useState<AppPage>('gallery');
   const [query, setQuery] = useState('');
@@ -35,6 +48,7 @@ function App() {
   const [activeCategory, setActiveCategory] = useState<FrameworkCategory | '全部主题'>('全部主题');
   const [selectedFramework, setSelectedFramework] = useState<FrameworkItem | null>(null);
   const [localFrameworks, setLocalFrameworks] = useState<LocalFrameworkItem[]>([]);
+  const [githubFrameworks, setGithubFrameworks] = useState<GitHubFrameworkItem[]>([]);
   const [storageMessage, setStorageMessage] = useState('');
 
   useEffect(() => {
@@ -43,9 +57,15 @@ function App() {
       .catch(() => setStorageMessage('本地图库读取失败，请检查浏览器 IndexedDB 权限。'));
   }, []);
 
+  useEffect(() => {
+    getGitHubFrameworks()
+      .then(setGithubFrameworks)
+      .catch(() => setStorageMessage('GitHub 同步图库读取失败，请稍后刷新重试。'));
+  }, []);
+
   const allFrameworks = useMemo(
-    () => [...frameworks, ...localFrameworks],
-    [localFrameworks],
+    () => mergeFrameworkSources([frameworks, githubFrameworks, localFrameworks]),
+    [githubFrameworks, localFrameworks],
   );
 
   const filteredFrameworks = useMemo(() => {
@@ -99,6 +119,32 @@ function App() {
     setSelectedFramework(null);
   };
 
+  const handleSyncToGitHub = async (framework: FrameworkItem) => {
+    if (framework.source !== 'local') {
+      throw new Error('只有本地上传图形可以同步到 GitHub。');
+    }
+
+    const githubFramework = await syncFrameworkToGitHub(framework as LocalFrameworkItem);
+    const syncedLocalFramework: LocalFrameworkItem = {
+      ...(framework as LocalFrameworkItem),
+      githubSyncedAt: githubFramework.updatedAt,
+      githubImagePath: githubFramework.imagePath,
+      githubRecordId: githubFramework.id,
+    };
+
+    await saveLocalFramework(syncedLocalFramework);
+    setLocalFrameworks((current) =>
+      current.map((item) => (item.id === syncedLocalFramework.id ? syncedLocalFramework : item)),
+    );
+    setGithubFrameworks((current) => {
+      const next = current.filter((item) => item.id !== githubFramework.id);
+      return [...next, githubFramework];
+    });
+    setSelectedFramework(syncedLocalFramework);
+
+    return githubFramework;
+  };
+
   return (
     <main className="app-shell">
       <TopNavigation currentPage={currentPage} onNavigate={setCurrentPage} />
@@ -127,6 +173,7 @@ function App() {
           <div className="gallery-summary" aria-live="polite">
             当前显示 <strong>{filteredFrameworks.length}</strong> / {allFrameworks.length} 张图形
             {localFrameworks.length > 0 ? `，其中本地上传 ${localFrameworks.length} 张` : ''}
+            {githubFrameworks.length > 0 ? `，GitHub 同步 ${githubFrameworks.length} 张` : ''}
           </div>
 
           {storageMessage ? <p className="storage-message">{storageMessage}</p> : null}
@@ -150,6 +197,7 @@ function App() {
         framework={selectedFramework}
         onClose={() => setSelectedFramework(null)}
         onDeleteLocal={handleDeleteLocalFramework}
+        onSyncToGitHub={handleSyncToGitHub}
       />
     </main>
   );

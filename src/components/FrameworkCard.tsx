@@ -5,6 +5,18 @@ interface FrameworkCardProps {
   onOpen: (framework: FrameworkItem) => void;
 }
 
+function getSourceLabel(source: FrameworkItem['source']) {
+  if (source === 'local') {
+    return '本地上传';
+  }
+
+  if (source === 'github') {
+    return 'GitHub 同步';
+  }
+
+  return '示例图形';
+}
+
 export function FrameworkCard({ framework, onOpen }: FrameworkCardProps) {
   return (
     <article className="framework-card">
@@ -21,8 +33,7 @@ export function FrameworkCard({ framework, onOpen }: FrameworkCardProps) {
           <div className="framework-card__topline">
             <span className="framework-card__type">{framework.type}</span>
             <span className="framework-card__format">
-              {framework.source === 'local' ? '本地上传' : '示例图形'} ·{' '}
-              {framework.fileType.toUpperCase()}
+              {getSourceLabel(framework.source)} · {framework.fileType.toUpperCase()}
             </span>
           </div>
           <h2>{framework.title}</h2>
