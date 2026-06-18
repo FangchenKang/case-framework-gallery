@@ -1,5 +1,5 @@
-import { Upload } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { Clipboard, Upload } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import {
   frameworkCategories,
   frameworkTypes,
@@ -11,6 +11,7 @@ import { createLocalFrameworkId, type LocalFrameworkItem } from '../data/localFr
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const ACCEPTED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'svg'];
+const PASTED_IMAGE_TYPES = ['image/png', 'image/jpeg'];
 
 interface UploadPageProps {
   localFrameworks: LocalFrameworkItem[];
@@ -79,6 +80,29 @@ function readFileAsDataUrl(file: File): Promise<string> {
     reader.onerror = () => reject(reader.error);
     reader.readAsDataURL(file);
   });
+}
+
+function getPasteFileExtension(type: string) {
+  return type === 'image/jpeg' ? 'jpg' : 'png';
+}
+
+function createPastedImageFile(file: File) {
+  const extension = getPasteFileExtension(file.type);
+  const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14);
+
+  return new File([file], `pasted-framework-${timestamp}.${extension}`, {
+    type: file.type,
+    lastModified: Date.now(),
+  });
+}
+
+function isTextInputTarget(target: EventTarget | null) {
+  return (
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    target instanceof HTMLSelectElement ||
+    (target instanceof HTMLElement && target.isContentEditable)
+  );
 }
 
 function parseTags(tags: string) {
@@ -165,6 +189,39 @@ export function UploadPage({
     }
   };
 
+  const handlePaste = (event: ClipboardEvent) => {
+    const items = Array.from(event.clipboardData?.items || []);
+    const imageItem = items.find(
+      (item) => item.kind === 'file' && PASTED_IMAGE_TYPES.includes(item.type),
+    );
+
+    if (!imageItem) {
+      if (!isTextInputTarget(event.target)) {
+        setMessage('未检测到图片，请先复制截图或拖拽上传文件。');
+      }
+
+      return;
+    }
+
+    const pastedFile = imageItem.getAsFile();
+
+    if (!pastedFile) {
+      setMessage('未检测到图片，请先复制截图或拖拽上传文件。');
+      return;
+    }
+
+    event.preventDefault();
+    void handleFile(createPastedImageFile(pastedFile));
+  };
+
+  useEffect(() => {
+    window.addEventListener('paste', handlePaste);
+
+    return () => {
+      window.removeEventListener('paste', handlePaste);
+    };
+  });
+
   const handleSave = async () => {
     setMessage('');
 
@@ -240,6 +297,9 @@ export function UploadPage({
       <div className="upload-layout">
         <section className="form-panel" aria-labelledby="file-section-title">
           <h3 id="file-section-title">图形文件</h3>
+          <p className="panel-note">
+            支持拖拽上传、点击选择，也支持截图后 Ctrl+V 直接粘贴。
+          </p>
           <button
             className={isDragging ? 'drop-zone is-dragging' : 'drop-zone'}
             type="button"
@@ -258,6 +318,10 @@ export function UploadPage({
             <Upload aria-hidden="true" size={28} strokeWidth={1.7} />
             <span>点击或拖拽上传 PNG、JPG、JPEG、SVG</span>
             <small>建议单个文件不超过 10MB</small>
+            <span className="paste-hint">
+              <Clipboard aria-hidden="true" size={16} strokeWidth={1.7} />
+              粘贴截图 Ctrl+V
+            </span>
           </button>
           <input
             ref={fileInputRef}
@@ -417,4 +481,3 @@ export function UploadPage({
     </section>
   );
 }
-

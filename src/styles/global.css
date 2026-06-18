@@ -833,6 +833,17 @@ textarea:focus {
   color: #666666;
 }
 
+.paste-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #333333;
+  font-size: 0.82rem;
+}
+
 .upload-preview {
   margin-top: 16px;
   padding: 14px;
