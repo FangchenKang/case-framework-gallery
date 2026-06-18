@@ -5,9 +5,10 @@ import type { FrameworkItem } from '../data/frameworks';
 interface FrameworkModalProps {
   framework: FrameworkItem | null;
   onClose: () => void;
+  onDeleteLocal: (id: string) => Promise<void>;
 }
 
-export function FrameworkModal({ framework, onClose }: FrameworkModalProps) {
+export function FrameworkModal({ framework, onClose, onDeleteLocal }: FrameworkModalProps) {
   const [copyStatus, setCopyStatus] = useState('');
 
   useEffect(() => {
@@ -51,6 +52,31 @@ export function FrameworkModal({ framework, onClose }: FrameworkModalProps) {
     }
   };
 
+  const copyCitation = async () => {
+    if (!framework.citation) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(framework.citation);
+      setCopyStatus('已复制引用来源');
+    } catch {
+      setCopyStatus('复制失败，请在浏览器中允许剪贴板权限');
+    }
+  };
+
+  const deleteLocalFramework = async () => {
+    if (framework.source !== 'local') {
+      return;
+    }
+
+    const confirmed = window.confirm(`确认删除“${framework.title}”？此操作只会删除本地图库数据。`);
+
+    if (confirmed) {
+      await onDeleteLocal(framework.id);
+    }
+  };
+
   return (
     <div className="modal" role="dialog" aria-modal="true" aria-labelledby="framework-modal-title">
       <button className="modal__overlay" type="button" onClick={onClose} aria-label="关闭详情" />
@@ -63,6 +89,9 @@ export function FrameworkModal({ framework, onClose }: FrameworkModalProps) {
           <div className="modal__header">
             <div>
               <span className="modal__type">{framework.type}</span>
+              <span className="modal__source">
+                {framework.source === 'local' ? '本地上传' : '示例图形'}
+              </span>
               <h2 id="framework-modal-title">{framework.title}</h2>
             </div>
             <button className="icon-button" type="button" onClick={onClose} title="关闭">
@@ -72,6 +101,10 @@ export function FrameworkModal({ framework, onClose }: FrameworkModalProps) {
           </div>
 
           <div className="modal__content">
+            <div>
+              <h3>研究主题</h3>
+              <p>{framework.category}</p>
+            </div>
             <div>
               <h3>说明</h3>
               <p>{framework.description}</p>
@@ -88,6 +121,29 @@ export function FrameworkModal({ framework, onClose }: FrameworkModalProps) {
                 ))}
               </ul>
             </div>
+            {framework.citation ? (
+              <div>
+                <div className="modal__section-title">
+                  <h3>引用来源</h3>
+                  <button className="text-button" type="button" onClick={copyCitation}>
+                    复制引用
+                  </button>
+                </div>
+                <p className="pre-line">{framework.citation}</p>
+              </div>
+            ) : null}
+            {framework.notes ? (
+              <div>
+                <h3>备注</h3>
+                <p className="pre-line">{framework.notes}</p>
+              </div>
+            ) : null}
+            {framework.talkScript ? (
+              <div>
+                <h3>讲解句式</h3>
+                <p className="pre-line">{framework.talkScript}</p>
+              </div>
+            ) : null}
             <dl className="modal__facts">
               <div>
                 <dt>文件格式</dt>
@@ -109,6 +165,11 @@ export function FrameworkModal({ framework, onClose }: FrameworkModalProps) {
               <button className="button button--secondary" type="button" onClick={copySvgSource}>
                 <Clipboard aria-hidden="true" size={17} />
                 复制 SVG 源代码
+              </button>
+            ) : null}
+            {framework.source === 'local' ? (
+              <button className="button button--danger" type="button" onClick={deleteLocalFramework}>
+                删除此图形
               </button>
             ) : null}
             {copyStatus ? <span className="modal__status">{copyStatus}</span> : null}

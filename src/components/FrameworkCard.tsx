@@ -20,9 +20,13 @@ export function FrameworkCard({ framework, onOpen }: FrameworkCardProps) {
         <div className="framework-card__body">
           <div className="framework-card__topline">
             <span className="framework-card__type">{framework.type}</span>
-            <span className="framework-card__format">{framework.fileType.toUpperCase()}</span>
+            <span className="framework-card__format">
+              {framework.source === 'local' ? '本地上传' : '示例图形'} ·{' '}
+              {framework.fileType.toUpperCase()}
+            </span>
           </div>
           <h2>{framework.title}</h2>
+          <p className="framework-card__category">{framework.category}</p>
           <p className="framework-card__scene">{framework.scene}</p>
           <p className="framework-card__description">{framework.description}</p>
           <ul className="tag-list" aria-label={`${framework.title} 的关键词`}>
