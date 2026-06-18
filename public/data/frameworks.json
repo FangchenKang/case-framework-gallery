@@ -40,5 +40,27 @@
     "createdAt": "2026-06-18T09:31:33.759Z",
     "updatedAt": "2026-06-18T14:12:21.336Z",
     "fileName": "176d319ee6709809e7d71d35347bfeed.png"
+  },
+  {
+    "id": "paste-sync-test-1781797439",
+    "title": "公网粘贴同步验收图",
+    "category": "其他",
+    "type": "机制图",
+    "scene": "公网粘贴后同步 GitHub 验收",
+    "tags": [
+      "截图粘贴",
+      "GitHub同步",
+      "Vercel"
+    ],
+    "description": "用于验证粘贴截图生成的 PNG 可以进入现有 GitHub 同步流程。",
+    "citation": "公网粘贴上传验收引用",
+    "notes": "Codex 自动验收图，可后续删除。",
+    "talkScript": "这张图用于说明截图粘贴上传到 GitHub 的完整链路。",
+    "imagePath": "/frameworks/uploads/2026-06-18/32fcdbf67ed343378aa8dc0a47648343.png",
+    "fileType": "png",
+    "sourceType": "github",
+    "createdAt": "2026-06-18T15:43:59.9552132Z",
+    "updatedAt": "2026-06-18T15:44:03.133Z",
+    "fileName": "pasted-framework-20260618154359.png"
   }
 ]
