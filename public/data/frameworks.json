@@ -20,5 +20,25 @@
     "createdAt": "2026-06-18T08:48:45.7850090Z",
     "updatedAt": "2026-06-18T08:48:46.279Z",
     "fileName": "sync-acceptance-test.svg"
+  },
+  {
+    "id": "local-f655406f-8b92-4727-ab01-56d341f93b8a",
+    "title": "结构优化：专班统筹破梗阻，激励相容促转化",
+    "category": "案例比赛通用模板",
+    "type": "机制图",
+    "scene": "1",
+    "tags": [
+      "结构优化"
+    ],
+    "description": "无",
+    "citation": "雪山下的公园城市：成都二十万亩耕绿风雨飘摇录——城市何以突围巨型生态工程治理困局",
+    "notes": "",
+    "talkScript": "11",
+    "imagePath": "/frameworks/uploads/2026-06-18/d224c104b8094250806cff33ea43925d.png",
+    "fileType": "png",
+    "sourceType": "github",
+    "createdAt": "2026-06-18T09:31:33.759Z",
+    "updatedAt": "2026-06-18T09:31:43.038Z",
+    "fileName": "176d319ee6709809e7d71d35347bfeed.png"
   }
 ]
