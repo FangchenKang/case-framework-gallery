@@ -2,6 +2,8 @@
 
 一个本地可运行的案例框架图库项目，用于储存、检索和复用案例比赛与学术汇报中的框架图。项目第一阶段定位为“案例框架图仓库”，不包含复杂在线绘图功能。
 
+在线访问地址：[https://FangchenKang.github.io/case-framework-gallery/](https://FangchenKang.github.io/case-framework-gallery/)
+
 ## 功能
 
 - 图库式首页展示框架图卡片
