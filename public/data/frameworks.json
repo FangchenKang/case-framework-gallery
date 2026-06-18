@@ -1,1 +1,24 @@
-[]
+[
+  {
+    "id": "sync-test-1781772525",
+    "title": "同步验收测试框架",
+    "category": "其他",
+    "type": "机制图",
+    "scene": "Vercel 与 GitHub 同步验收",
+    "tags": [
+      "同步测试",
+      "Vercel",
+      "GitHub"
+    ],
+    "description": "用于确认公网网站能够把上传图形写入 GitHub 仓库。",
+    "citation": "",
+    "notes": "Codex 自动验收测试，可后续删除。",
+    "talkScript": "",
+    "imagePath": "/frameworks/uploads/2026-06-18/43f6551c7d3a4ae8931765d7486cdf17.svg",
+    "fileType": "svg",
+    "sourceType": "github",
+    "createdAt": "2026-06-18T08:48:45.7850090Z",
+    "updatedAt": "2026-06-18T08:48:46.279Z",
+    "fileName": "sync-acceptance-test.svg"
+  }
+]
