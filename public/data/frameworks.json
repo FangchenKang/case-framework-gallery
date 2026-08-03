@@ -62,5 +62,25 @@
     "createdAt": "2026-06-18T15:43:59.9552132Z",
     "updatedAt": "2026-06-18T15:44:03.133Z",
     "fileName": "pasted-framework-20260618154359.png"
+  },
+  {
+    "id": "local-9b74e31d-b4ab-4c34-a69e-c01503df659f",
+    "title": "激励行为产出模型",
+    "category": "生态治理与价值共创",
+    "type": "机制图",
+    "scene": "分析",
+    "tags": [
+      "环境政策有效性"
+    ],
+    "description": "1",
+    "citation": "唐啸：正式与非正式激励",
+    "notes": "",
+    "talkScript": "",
+    "imagePath": "/frameworks/uploads/2026-08-03/dac272cf6c414c608e61902aecabc68d.png",
+    "fileType": "png",
+    "sourceType": "github",
+    "createdAt": "2026-08-03T09:33:28.144Z",
+    "updatedAt": "2026-08-03T09:33:57.055Z",
+    "fileName": "pasted-framework-20260803093238.png"
   }
 ]
