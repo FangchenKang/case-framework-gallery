@@ -82,5 +82,25 @@
     "createdAt": "2026-08-03T09:33:28.144Z",
     "updatedAt": "2026-08-03T09:33:57.055Z",
     "fileName": "pasted-framework-20260803093238.png"
+  },
+  {
+    "id": "local-2afa554a-86d9-46dd-ac9f-3a0cdd13a269",
+    "title": "公共文化空间再生产框架",
+    "category": "其他",
+    "type": "机制图",
+    "scene": "机制分析",
+    "tags": [
+      "公共空间分析"
+    ],
+    "description": "公共空间分析",
+    "citation": "",
+    "notes": "",
+    "talkScript": "",
+    "imagePath": "/frameworks/uploads/2026-08-11/612b6933c4e94590bde8098dcc98f8b0.png",
+    "fileType": "png",
+    "sourceType": "github",
+    "createdAt": "2026-08-11T06:39:01.492Z",
+    "updatedAt": "2026-08-11T06:39:11.196Z",
+    "fileName": "pasted-framework-20260811063829.png"
   }
 ]
