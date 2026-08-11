@@ -102,5 +102,25 @@
     "createdAt": "2026-08-11T06:39:01.492Z",
     "updatedAt": "2026-08-11T06:39:11.196Z",
     "fileName": "pasted-framework-20260811063829.png"
+  },
+  {
+    "id": "local-a40f1bb0-eec7-4e6a-a895-8b915a9961af",
+    "title": "空间功能转换下的主体间关系",
+    "category": "其他",
+    "type": "机制图",
+    "scene": "1",
+    "tags": [
+      "空间功能转换下的主体间关系"
+    ],
+    "description": "1",
+    "citation": "",
+    "notes": "",
+    "talkScript": "",
+    "imagePath": "/frameworks/uploads/2026-08-11/589025e5500f486dbd42f1404c1ce27c.png",
+    "fileType": "png",
+    "sourceType": "github",
+    "createdAt": "2026-08-11T07:36:58.455Z",
+    "updatedAt": "2026-08-11T07:37:22.879Z",
+    "fileName": "pasted-framework-20260811073639.png"
   }
 ]
